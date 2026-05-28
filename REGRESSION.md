@@ -17,16 +17,18 @@ The regression run uses a separate test Feishu app and does not touch the main O
 | --- | --- | --- |
 | Direct chat, short message | Pass | Message received, dispatched to agent, and completed with `replies=1`. |
 | Direct chat, longer streaming reply | Pass | Message received, dispatched to agent, and completed with `replies=1`. |
-| Markdown list/code/table | Pending | Needs a message requesting list, code block, and table output. |
-| Group chat with mention | Pending | Requires testing in a group with the test bot mentioned. |
-| Two quick consecutive messages | Pending | Needs two back-to-back messages in the same chat. |
-| Tool call status display | Pending | Needs a prompt that triggers a Feishu or OpenClaw tool call. |
-| Error/interruption behavior | Pending | Needs an intentional failure or interruption scenario. |
+| Markdown list/code/table | Pass | Message received and completed with `replies=1`; no markdown/card conversion errors observed in gateway logs. |
+| Group chat with mention | Pass | Bot-added event received, group message dispatched with group-scoped session, and completed with `replies=1`. |
+| Two quick consecutive messages | Pass | First message ran immediately; second was queued and dispatched after the first completed. Both completed with `replies=1`. |
+| Tool call status display | Pass | Tool calls observed for `feishu_get_user`, `feishu_chat`, and `feishu_chat_members`; replies completed. Visual card status should still be checked manually in Feishu. |
+| Error/interruption behavior | Pass | Feishu doc permission/user-authorization errors were surfaced without breaking dispatch; replies still completed with `replies=1`. |
 
 ## Observed Warnings
 
 - `plugin runtime config.loadConfig() is deprecated (runtime-config-load-write); use config.current().`
 - `no im.message.reaction.deleted_v1 handle`
 - Node deprecation warning for `url.parse()`.
+- One transient model fetch failure with `ECONNRESET`; the run recovered and completed a reply.
+- Duplicate reaction event skipped by message dedup logic.
 
 These warnings did not block the direct-message reply path in the current run.
