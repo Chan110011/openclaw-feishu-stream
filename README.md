@@ -62,6 +62,7 @@ npm run dev:configure
 npm run dev:link
 npm run dev:inspect
 npm run dev:doctor
+npm run dev:gateway
 ```
 
 开发脚本使用隔离 profile `feishu-stream-dev`，不会改动主 OpenClaw 配置或当前正在使用的飞书插件。
@@ -75,6 +76,8 @@ npm run dev:configure
 ```
 
 不要复用生产飞书 App 同时启动 dev gateway。两个 gateway 使用同一个 App websocket 时，消息事件可能被重复消费。
+
+`dev:gateway` 固定使用 `127.0.0.1:19002`，避免和主 OpenClaw gateway 默认端口混用。
 
 > [!WARNING]
 > 生产切换前不要把本插件直接安装到主 profile。它和官方 Feishu 插件都声明 `feishu` channel，真实接入时必须只保留一个 Feishu channel 处理器在线，并准备回滚步骤。

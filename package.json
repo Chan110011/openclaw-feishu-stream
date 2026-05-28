@@ -22,7 +22,7 @@
     "dev:link": "openclaw --profile feishu-stream-dev plugins install --link .",
     "dev:doctor": "openclaw --profile feishu-stream-dev plugins doctor",
     "dev:inspect": "openclaw --profile feishu-stream-dev plugins inspect openclaw-feishu-stream --runtime",
-    "dev:gateway": "openclaw --profile feishu-stream-dev gateway run --force",
+    "dev:gateway": "openclaw --profile feishu-stream-dev gateway run --port 19002 --force",
     "lint": "eslint src/ index.ts",
     "lint:fix": "eslint src/ index.ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -46,7 +46,7 @@
     "execa": "^9.6.0",
     "fs-extra": "^11.3.2",
     "minimist": "^1.2.8",
-    "openclaw": "^2026.5.22",
+    "openclaw": "2026.5.22",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3"
   },

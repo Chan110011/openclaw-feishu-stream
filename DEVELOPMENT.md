@@ -39,6 +39,7 @@ npm run dev:configure
 npm run dev:link
 npm run dev:inspect
 npm run dev:doctor
+npm run dev:gateway
 ```
 
 Do not install this plugin into the main OpenClaw profile until there is an explicit cutover and rollback plan. The production cutover must account for the fact that only one plugin should own the `feishu` channel at a time.
@@ -52,6 +53,8 @@ npm run dev:configure
 ```
 
 Do not reuse the production Feishu/Lark app while the main gateway is running. Two websocket clients for the same app can consume the same event stream and cause duplicate or missing replies.
+
+`dev:gateway` uses `127.0.0.1:19002` so it does not collide with the main gateway's default port.
 
 ## Identity Model
 

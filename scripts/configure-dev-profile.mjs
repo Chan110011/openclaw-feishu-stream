@@ -4,6 +4,8 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
+import { createInterface } from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
 
 const PROFILE = "feishu-stream-dev";
 
@@ -13,23 +15,27 @@ function readEnv(name, fallback) {
   return value.trim();
 }
 
-function requireEnv(name) {
-  const value = readEnv(name);
-  if (!value) {
-    missing.push(name);
-    return "";
+async function promptMissingCredentials() {
+  const rl = createInterface({ input, output });
+  try {
+    const appId = readEnv("FEISHU_STREAM_DEV_APP_ID") ?? (await rl.question("Test Feishu App ID: "));
+    const appSecret =
+      readEnv("FEISHU_STREAM_DEV_APP_SECRET") ?? (await rl.question("Test Feishu App Secret: "));
+    return {
+      appId: appId.trim(),
+      appSecret: appSecret.trim(),
+    };
+  } finally {
+    rl.close();
   }
-  return value;
 }
 
-const missing = [];
-const appId = requireEnv("FEISHU_STREAM_DEV_APP_ID");
-const appSecret = requireEnv("FEISHU_STREAM_DEV_APP_SECRET");
+const { appId, appSecret } = await promptMissingCredentials();
 const domain = readEnv("FEISHU_STREAM_DEV_DOMAIN", "feishu");
 const connectionMode = readEnv("FEISHU_STREAM_DEV_CONNECTION_MODE", "websocket");
 
-if (missing.length > 0) {
-  console.error(`Missing required environment variable(s): ${missing.join(", ")}`);
+if (!appId || !appSecret) {
+  console.error("Missing required test Feishu App ID or App Secret.");
   console.error("");
   console.error("Use a separate test Feishu/Lark app. Do not reuse the production app while the main gateway is running.");
   console.error("");
