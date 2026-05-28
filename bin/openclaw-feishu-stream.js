@@ -12,11 +12,13 @@ your main OpenClaw profile from this CLI.
 Safe local workflow:
   npm install
   npm run build
+  npm run dev:configure
   npm run dev:link
   npm run dev:inspect
   npm run dev:doctor
 
 The dev scripts use the isolated OpenClaw profile "feishu-stream-dev".
+Use a separate test Feishu/Lark app for dev:configure.
 Production cutover should be done manually with an explicit rollback plan.`);
 }
 

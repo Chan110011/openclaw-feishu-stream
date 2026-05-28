@@ -35,12 +35,23 @@ Use the isolated OpenClaw profile `feishu-stream-dev` for development checks:
 ```bash
 npm install
 npm run build
+npm run dev:configure
 npm run dev:link
 npm run dev:inspect
 npm run dev:doctor
 ```
 
 Do not install this plugin into the main OpenClaw profile until there is an explicit cutover and rollback plan. The production cutover must account for the fact that only one plugin should own the `feishu` channel at a time.
+
+`dev:configure` requires a separate test Feishu/Lark app:
+
+```bash
+FEISHU_STREAM_DEV_APP_ID=cli_xxx \
+FEISHU_STREAM_DEV_APP_SECRET=xxx \
+npm run dev:configure
+```
+
+Do not reuse the production Feishu/Lark app while the main gateway is running. Two websocket clients for the same app can consume the same event stream and cause duplicate or missing replies.
 
 ## Identity Model
 
