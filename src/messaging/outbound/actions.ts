@@ -160,6 +160,19 @@ function readFeishuSendParams(
 // ---------------------------------------------------------------------------
 
 export const feishuMessageActions: ChannelMessageActionAdapter = {
+  describeMessageTool: ({ cfg }) => {
+    const accounts = getEnabledLarkAccounts(cfg);
+    if (accounts.length === 0) return null;
+
+    return {
+      actions: Array.from(SUPPORTED_ACTIONS),
+      capabilities: ['presentation'],
+      mediaSourceParams: {
+        send: ['media', 'path', 'filePath', 'url'],
+      },
+    };
+  },
+
   listActions: ({ cfg }) => {
     const accounts = getEnabledLarkAccounts(cfg);
     if (accounts.length === 0) return [];
