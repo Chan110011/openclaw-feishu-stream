@@ -10,12 +10,23 @@
  */
 
 import type { HistoryEntry } from 'openclaw/plugin-sdk';
-import { buildPendingHistoryContextFromMap } from 'openclaw/plugin-sdk';
 import type { MessageContext } from '../types';
 import type { DispatchContext } from './dispatch-context';
 import { LarkClient } from '../../core/lark-client';
 import { nonBotMentions } from './mention';
 import { threadScopedKey } from '../../channel/chat-queue';
+
+function buildPendingHistoryContextFromMap(params: {
+  historyMap: Map<string, HistoryEntry[]>;
+  historyKey: string;
+  limit: number;
+  currentMessage: string;
+  formatEntry: (entry: HistoryEntry) => string;
+}): string {
+  const entries = params.historyMap.get(params.historyKey) ?? [];
+  const history = params.limit > 0 ? entries.slice(-params.limit).map(params.formatEntry) : [];
+  return [...history, params.currentMessage].filter(Boolean).join('\n\n');
+}
 
 // ---------------------------------------------------------------------------
 // Mention annotation

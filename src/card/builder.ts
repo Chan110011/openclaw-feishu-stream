@@ -461,7 +461,6 @@ function buildCompleteCard(params: {
     for (const event of streamEvents) {
       if (event.type === 'reasoning') {
         const dur = event.elapsedMs ? formatReasoningDuration(event.elapsedMs) : null;
-        const zhLabel = dur ? `💭 ${dur.zh}` : '💭 思考';
         const enLabel = dur ? `💭 ${dur.en}` : '💭 Thought';
         innerLines.push(`**${enLabel}**`);
         innerLines.push(event.text);
