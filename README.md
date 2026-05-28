@@ -1,8 +1,8 @@
 [English](./README.en.md) | 中文
 
-# OpenClaw 飞书插件 — 流式卡片版
+# OpenClaw Feishu Stream
 
-基于官方 [openclaw-lark](https://github.com/larksuite/openclaw-lark) 插件，支持**实时流式输出**和 **Agent 执行过程可视化**。
+面向 `OpenClaw 2026.5.x` 的飞书流式卡片二开版本。当前以 [ColinLu50/openclaw-lark-stream](https://github.com/ColinLu50/openclaw-lark-stream) 为体验参考，目标是把满意的流式卡片、工具状态、推理面板和底栏能力移植到新版 OpenClaw Feishu 插件兼容层上。
 <img src="./assets/demo.gif" width="480" />
 
 <sub>▲ 群中真流式输出，并显示全部执行逻辑</sub>
@@ -49,29 +49,14 @@
 > npm install -g openclaw@2026.3.24
 > ```
 
-安装脚本会自动检测 OpenClaw 版本并安装对应的插件版本：
-- OpenClaw **>= 2026.3.22** → 自动安装最新版（支持推理流式、AskUserQuestion 等）
-- OpenClaw **< 2026.3.22** → 自动安装兼容旧版的插件
-
-> [!NOTE]
-> **不支持阿里云 OpenClaw 套餐**（权限限制），请使用自建服务器安装。
-
-```bash
-npx -y @colinlu50/openclaw-lark-stream install
-```
-
-已安装后更新：
-
-```bash
-npx -y @colinlu50/openclaw-lark-stream update
-```
+当前仓库处于 `OpenClaw 2026.5.22` 适配开发阶段，安装脚本和发布包名尚未固定。
 
 ### 从源码安装（开发用）
 
 ```bash
 cd ~/.openclaw/extensions
-git clone https://github.com/ColinLu50/openclaw-lark-stream.git openclaw-lark-stream
-cd openclaw-lark-stream && npm install && npm run build
+git clone <your-github-repo-url> openclaw-feishu-stream
+cd openclaw-feishu-stream && npm install && npm run build
 openclaw gateway restart
 ```
 
