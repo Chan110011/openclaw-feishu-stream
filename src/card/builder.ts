@@ -211,6 +211,15 @@ export function compactNumber(value: number): string {
   return `${Math.round(value)}`;
 }
 
+function compactModelName(model: string): string {
+  const trimmed = model.trim();
+  if (!trimmed) return '';
+
+  const withoutProvider = trimmed.includes('/') ? (trimmed.split('/').pop() ?? trimmed) : trimmed;
+  if (withoutProvider.length <= 28) return withoutProvider;
+  return `${withoutProvider.slice(0, 25)}...`;
+}
+
 export function formatFooterRuntimeSegments(params: {
   footer?: {
     status?: boolean;
@@ -305,10 +314,10 @@ export function formatFooterRuntimeSegments(params: {
   }
 
   if (footer?.model && metrics?.model) {
-    const model = metrics.model.trim();
+    const model = compactModelName(metrics.model);
     if (model) {
-      zhParts.push(model);
-      enParts.push(model);
+      zhParts.push(verbose ? `模型 ${model}` : model);
+      enParts.push(verbose ? `Model ${model}` : model);
     }
   }
 

@@ -112,7 +112,7 @@ openclaw gateway restart
 | `footer.tokens` | ✅ on | Input / output token counts |
 | `footer.context` | ✅ on | Context window usage |
 | `footer.cache` | ❌ off | Cache hit rate (must enable separately) |
-| `footer.model` | ❌ off | Model name (must enable separately) |
+| `footer.model` | ✅ on | Current runtime model |
 
 `verbose` only controls **display format** — each item's on/off is independent:
 

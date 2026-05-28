@@ -116,7 +116,7 @@ openclaw gateway restart
 | `footer.tokens` | ✅ 开 | input / output token 数 |
 | `footer.context` | ✅ 开 | context window 使用率 |
 | `footer.cache` | ❌ 关 | 缓存命中（需单独开启） |
-| `footer.model` | ❌ 关 | 模型名称（需单独开启） |
+| `footer.model` | ✅ 开 | 当前运行模型 |
 
 `verbose` 只控制**展示格式**，各项的开关相互独立：
 

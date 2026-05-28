@@ -17,8 +17,8 @@ import type { FeishuFooterConfig } from './types';
 /**
  * The default footer configuration (compact mode).
  *
- * Status, elapsed, tokens and context usage are on by default.
- * Cache details and model name are off by default.
+ * Status, elapsed, tokens, context usage and model name are on by default.
+ * Cache details are off by default.
  * verbose is off by default (compact icon format).
  */
 export const DEFAULT_FOOTER_CONFIG: Required<FeishuFooterConfig> = {
@@ -28,7 +28,7 @@ export const DEFAULT_FOOTER_CONFIG: Required<FeishuFooterConfig> = {
   tokens: true,
   cache: false,
   context: true,
-  model: false,
+  model: true,
 };
 
 // ---------------------------------------------------------------------------
