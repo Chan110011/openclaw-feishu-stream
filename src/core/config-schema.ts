@@ -61,6 +61,7 @@ const FeishuToolsFlagSchema = z
 
 const FeishuFooterSchema = z
   .object({
+    verbose: z.boolean().optional(),
     status: z.boolean().optional(),
     elapsed: z.boolean().optional(),
     tokens: z.boolean().optional(),

@@ -28,3 +28,23 @@ Avoid carrying forward old OpenClaw integration code unless it is still required
 - `upstream`: ColinLu50 reference repository, fetch only
 - `origin`: reserved for the user's GitHub repository
 
+## Safe Local Workflow
+
+Use the isolated OpenClaw profile `feishu-stream-dev` for development checks:
+
+```bash
+npm install
+npm run build
+npm run dev:link
+npm run dev:inspect
+npm run dev:doctor
+```
+
+Do not install this plugin into the main OpenClaw profile until there is an explicit cutover and rollback plan. The production cutover must account for the fact that only one plugin should own the `feishu` channel at a time.
+
+## Identity Model
+
+- Plugin id: `openclaw-feishu-stream`
+- Channel id: `feishu`
+
+The plugin id is unique so the fork can be tracked independently. The channel id remains `feishu` because the fork intentionally replaces the Feishu channel implementation during a planned cutover.

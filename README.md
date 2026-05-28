@@ -54,11 +54,19 @@
 ### 从源码安装（开发用）
 
 ```bash
-cd ~/.openclaw/extensions
 git clone <your-github-repo-url> openclaw-feishu-stream
-cd openclaw-feishu-stream && npm install && npm run build
-openclaw gateway restart
+cd openclaw-feishu-stream
+npm install
+npm run build
+npm run dev:link
+npm run dev:inspect
+npm run dev:doctor
 ```
+
+开发脚本使用隔离 profile `feishu-stream-dev`，不会改动主 OpenClaw 配置或当前正在使用的飞书插件。
+
+> [!WARNING]
+> 生产切换前不要把本插件直接安装到主 profile。它和官方 Feishu 插件都声明 `feishu` channel，真实接入时必须只保留一个 Feishu channel 处理器在线，并准备回滚步骤。
 
 ## ⚙️ 配置
 

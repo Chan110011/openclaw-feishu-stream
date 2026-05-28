@@ -66,8 +66,33 @@
           "domain": {},
           "streaming": { "type": "boolean" },
           "blockStreaming": { "type": "boolean" },
-          "replyMode": {},
-          "footer": { "type": "object", "additionalProperties": true },
+          "replyMode": {
+            "oneOf": [
+              { "enum": ["auto", "static", "streaming"] },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "default": { "enum": ["auto", "static", "streaming"] },
+                  "direct": { "enum": ["auto", "static", "streaming"] },
+                  "group": { "enum": ["auto", "static", "streaming"] }
+                }
+              }
+            ]
+          },
+          "footer": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "verbose": { "type": "boolean" },
+              "status": { "type": "boolean" },
+              "elapsed": { "type": "boolean" },
+              "tokens": { "type": "boolean" },
+              "cache": { "type": "boolean" },
+              "context": { "type": "boolean" },
+              "model": { "type": "boolean" }
+            }
+          },
           "accounts": { "type": "object", "additionalProperties": true }
         }
       }
