@@ -40,7 +40,7 @@ This fork is developed against the user's currently installed OpenClaw version. 
 
 ## Production Cutover Notes
 
-Before using this fork for the main Feishu communication path:
+Before using this fork for the main Feishu communication path, follow [CUTOVER.md](./CUTOVER.md). At a minimum:
 
 1. Back up the main OpenClaw config.
 2. Stop the current Feishu gateway/channel.

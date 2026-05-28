@@ -74,6 +74,8 @@ npm run dev:configure
 > [!WARNING]
 > 生产切换前不要把本插件直接安装到主 profile。它和官方 Feishu 插件都声明 `feishu` channel，真实接入时必须只保留一个 Feishu channel 处理器在线，并准备回滚步骤。
 
+生产切换步骤见 [CUTOVER.md](./CUTOVER.md)。
+
 ## ⚙️ 配置
 
 ### 流式输出

@@ -70,6 +70,8 @@ Do not reuse the production Feishu/Lark app while the main gateway is running. T
 > [!WARNING]
 > Before production cutover, remember that this fork and the official Feishu plugin both declare the `feishu` channel. Only one Feishu channel owner should be online at a time.
 
+See [CUTOVER.md](./CUTOVER.md) for the production cutover runbook.
+
 ## ⚙️ Configuration
 
 ### Streaming Output
