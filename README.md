@@ -41,14 +41,7 @@
 > [!WARNING]
 > 官方 `@openclaw/feishu` 和本插件都声明 `feishu` channel。生产环境中同一时间只能启用一个 Feishu channel 处理器，否则可能导致同一个飞书 App 的消息被重复消费或连接互相抢占。
 
-建议流程：
-
-1. 先用隔离开发 profile 测试。
-2. 备份主 OpenClaw 配置。
-3. 停用官方 `@openclaw/feishu`。
-4. link 本插件到主 profile。
-5. 开启 streaming 配置。
-6. 重启 gateway 并做飞书烟测。
+建议先用隔离 profile 测试。确认效果后，再在维护窗口内执行生产安装。
 
 ## 从源码安装
 
@@ -83,74 +76,55 @@ npm run dev:configure
 
 ## 生产安装
 
-以下步骤会影响当前飞书通信，请先确认维护窗口。
+以下命令会影响当前飞书通信，请先确认维护窗口。
 
-### 1. 备份主配置
+在本仓库目录执行：
 
 ```bash
 BACKUP_DIR=~/openclaw-backups/feishu-cutover-$(date +%Y%m%d-%H%M%S)
 mkdir -p "$BACKUP_DIR"
 cp ~/.openclaw/openclaw.json "$BACKUP_DIR/openclaw.json"
-```
-
-也可以使用你自己的备份目录，只要确保不要把配置文件提交到 GitHub。
-
-### 2. 停用官方 Feishu 插件
-
-```bash
-openclaw plugins disable feishu
-```
-
-### 3. link 本插件
-
-在本仓库目录执行：
-
-```bash
 npm install
 npm run build
+openclaw plugins disable feishu
 openclaw plugins install --link .
+openclaw config patch --stdin <<'JSON'
+{
+  channels: {
+    feishu: {
+      streaming: true,
+      replyMode: {
+        direct: "streaming",
+        group: "streaming",
+        default: "streaming"
+      },
+      footer: {
+        model: true
+      }
+    }
+  }
+}
+JSON
+openclaw gateway restart
 ```
 
-确认插件状态：
+安装后检查：
 
 ```bash
+openclaw gateway status
+openclaw plugins doctor
 openclaw plugins inspect openclaw-feishu-stream --runtime
 openclaw plugins inspect feishu --runtime
+openclaw channels status
 ```
 
 预期结果：
 
 - `openclaw-feishu-stream`：`loaded`
 - 官方 `feishu`：`disabled`
+- Feishu channel：`ON / OK`
 
-### 4. 开启流式卡片
-
-```bash
-openclaw config set channels.feishu.streaming true
-openclaw config set channels.feishu.replyMode.direct streaming
-openclaw config set channels.feishu.replyMode.group streaming
-openclaw config set channels.feishu.replyMode.default streaming
-```
-
-### 5. 开启底栏模型显示
-
-```bash
-openclaw config set channels.feishu.footer.model true
-```
-
-### 6. 重启 Gateway
-
-```bash
-openclaw gateway restart
-```
-
-确认状态：
-
-```bash
-openclaw gateway status
-openclaw plugins doctor
-openclaw channels status
-```
+备份文件保存在 `$BACKUP_DIR/openclaw.json`。不要把备份配置提交到 GitHub。
 
 ## 烟测建议
 
