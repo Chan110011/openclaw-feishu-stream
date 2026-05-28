@@ -19,6 +19,7 @@ import type { MonitorFeishuOpts, MonitorContext } from './types';
 import {
   handleMessageEvent,
   handleReactionEvent,
+  handleReactionDeletedEvent,
   handleBotMembershipEvent,
   handleCardActionEvent,
 } from './event-handlers';
@@ -80,7 +81,7 @@ async function monitorSingleAccount(params: {
 
   const ctx: MonitorContext = {
     get cfg() {
-      return LarkClient.runtime.config.loadConfig();
+      return LarkClient.runtime.config.current() as ClawdbotConfig;
     },
     lark,
     accountId,
@@ -96,6 +97,7 @@ async function monitorSingleAccount(params: {
       'im.message.receive_v1': (data) => handleMessageEvent(ctx, data),
       'im.message.message_read_v1': async () => {},
       'im.message.reaction.created_v1': (data) => handleReactionEvent(ctx, data),
+      'im.message.reaction.deleted_v1': async (data) => handleReactionDeletedEvent(ctx, data),
       'im.chat.member.bot.added_v1': (data) => handleBotMembershipEvent(ctx, data, 'added'),
       'im.chat.member.bot.deleted_v1': (data) => handleBotMembershipEvent(ctx, data, 'removed'),
       // 飞书 SDK EventDispatcher.register 不支持带返回值的处理器，此处 as any 是 SDK 类型限制的变通

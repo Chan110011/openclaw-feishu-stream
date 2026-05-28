@@ -214,6 +214,23 @@ export async function handleReactionEvent(ctx: MonitorContext, data: unknown): P
   }
 }
 
+export async function handleReactionDeletedEvent(ctx: MonitorContext, data: unknown): Promise<void> {
+  if (!isEventOwnershipValid(ctx, data)) return;
+  const { accountId, log } = ctx;
+  const event = data as { message_id?: string; reaction_type?: { emoji_type?: string }; user_id?: { open_id?: string } };
+  const msgId = event.message_id ?? 'unknown';
+  const emojiType = event.reaction_type?.emoji_type ?? '';
+  const operatorOpenId = event.user_id?.open_id ?? '';
+  const dedupKey = `${msgId}:reaction-deleted:${emojiType}:${operatorOpenId}`;
+
+  if (!ctx.messageDedup.tryRecord(dedupKey, accountId)) {
+    log(`feishu[${accountId}]: duplicate reaction deletion ${dedupKey}, skipping`);
+    return;
+  }
+
+  log(`feishu[${accountId}]: reaction deletion on message ${msgId}, ignoring`);
+}
+
 // ---------------------------------------------------------------------------
 // Bot membership handler
 // ---------------------------------------------------------------------------

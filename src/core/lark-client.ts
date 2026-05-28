@@ -480,7 +480,7 @@ injectLarkClient(LarkClient);
  * The `config` object captured in tool-registration closures may be stale
  * after a hot-reload: openclaw re-initialises the runtime but the plugin
  * closure still holds the old snapshot.  Calling
- * `LarkClient.runtime.config.loadConfig()` always returns the current live
+ * `LarkClient.runtime.config.current()` returns the current live
  * config, so account lookups pick up any changes made since plugin load.
  *
  * @param fallback - Config to use when the runtime is not yet initialised
@@ -488,7 +488,7 @@ injectLarkClient(LarkClient);
  */
 export function getResolvedConfig(fallback: ClawdbotConfig): ClawdbotConfig {
   try {
-    return LarkClient.runtime.config.loadConfig() as ClawdbotConfig;
+    return LarkClient.runtime.config.current() as ClawdbotConfig;
   } catch {
     // runtime not yet initialised — fall back to passed config
     return fallback;

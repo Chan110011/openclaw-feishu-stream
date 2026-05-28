@@ -25,10 +25,14 @@ The regression run uses a separate test Feishu app and does not touch the main O
 
 ## Observed Warnings
 
-- `plugin runtime config.loadConfig() is deprecated (runtime-config-load-write); use config.current().`
-- `no im.message.reaction.deleted_v1 handle`
 - Node deprecation warning for `url.parse()`.
 - One transient model fetch failure with `ECONNRESET`; the run recovered and completed a reply.
 - Duplicate reaction event skipped by message dedup logic.
 
 These warnings did not block the direct-message reply path in the current run.
+
+## Warning Cleanup
+
+- Replaced runtime config reload calls with `runtime.config.current()`.
+- Added an explicit `im.message.reaction.deleted_v1` handler that deduplicates and ignores reaction deletion events.
+- Verified with a direct-message run and reaction add/remove test: the `config.loadConfig()` deprecation warning and missing reaction-deleted handler warning did not reappear.
