@@ -25,36 +25,28 @@
   - **思考过程面板** — 完成后，所有推理块和工具调用按发生顺序折叠进一个可展开面板
   - **Token 用量展示** — 卡片底部默认显示 input/output token 数和 context 使用百分比
 
-## 📢 News
+## 📢 当前状态
 
-- **2026.3.30**
-  - 安装脚本自动禁用 OpenClaw 内置飞书插件，避免冲突
-  - 安装后自动执行 `gateway install` 注册服务并健康检查
-  - ⚠️ **暂不支持 OpenClaw 3.28**，该版本存在兼容性问题，建议回退到 **3.24** 版本（预计 4.4 前支持）
-- **2026.3.27**
-  - 适配 OpenClaw >= 2026.3.22
-  - 新增 AskUserQuestion 交互式提问工具
-  - 推理块与工具调用按发生顺序合并为单个可展开面板
-  - 底栏默认显示 token 用量和 context 使用百分比
-  - 修复卡片表格超限错误 230099
-- **2026.3.23** — 发布第一版，支持实时流式输出和工具调用状态展示（适配 OpenClaw < 2026.3.22，请切换到 `0322` 分支）
+- **2026.5.28**
+  - 当前分支适配并实测 `OpenClaw 2026.5.22 (a374c3a)`。
+  - 已改为独立插件 id `openclaw-feishu-stream`，便于和原项目、官方插件区分。
+  - 已补齐 `OpenClaw 2026.5.22` 需要的 SDK 兼容层和 `describeMessageTool` action discovery。
+  - 已加入隔离开发 profile `feishu-stream-dev`，本地测试不会改动主 OpenClaw profile。
+  - 当前仍处于源码开发阶段，生产切换前需要完整回归测试和回滚方案。
+
+更多兼容性记录见 [COMPATIBILITY.md](./COMPATIBILITY.md)。
 
 ## 📦 安装
 
 需要 [OpenClaw](https://openclaw.ai) 和 Node.js（>= v22）。
 
 > [!WARNING]
-> **暂不支持 OpenClaw 3.28**，该版本存在兼容性问题（预计 4.4 前支持）。如已升级到 3.28，请回退到 **3.24** 版本后再安装：
-> ```bash
-> npm install -g openclaw@2026.3.24
-> ```
-
-当前仓库处于 `OpenClaw 2026.5.22` 适配开发阶段，安装脚本和发布包名尚未固定。
+> 当前仓库处于 `OpenClaw 2026.5.22` 适配开发阶段，安装脚本和发布包名尚未固定。不要直接安装到主 profile 覆盖生产飞书通信。
 
 ### 从源码安装（开发用）
 
 ```bash
-git clone <your-github-repo-url> openclaw-feishu-stream
+git clone https://github.com/Chan110011/openclaw-feishu-stream.git
 cd openclaw-feishu-stream
 npm install
 npm run build
@@ -67,7 +59,7 @@ npm run dev:gateway
 
 开发脚本使用隔离 profile `feishu-stream-dev`，不会改动主 OpenClaw 配置或当前正在使用的飞书插件。
 
-`dev:configure` 需要独立测试飞书 App 的环境变量：
+`dev:configure` 需要独立测试飞书 App。可以交互式输入，也可以通过环境变量传入：
 
 ```bash
 FEISHU_STREAM_DEV_APP_ID=cli_xxx \

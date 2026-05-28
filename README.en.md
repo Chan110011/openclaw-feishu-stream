@@ -1,8 +1,8 @@
 English | [中文](./README.md)
 
-# OpenClaw Lark/Feishu Plugin — Stream Card Edition
+# OpenClaw Feishu Stream
 
-Based on the official [openclaw-lark](https://github.com/larksuite/openclaw-lark) plugin, with **real-time streaming output** and **agent execution visibility**.
+An `OpenClaw 2026.5.x` Feishu/Lark streaming-card fork. The user experience is based on [ColinLu50/openclaw-lark-stream](https://github.com/ColinLu50/openclaw-lark-stream), while this repository focuses on compatibility with newer OpenClaw Feishu channel APIs.
 <img src="./assets/demo.gif" width="480" />
 <sub>▲ Real streaming in group chats with full execution trace</sub>
 
@@ -21,55 +21,54 @@ The official plugin delivers LLM block results all at once after completion. Thi
   - **Process panel** — on completion, all reasoning blocks and tool calls are collapsed into a single expandable panel in chronological order
   - **Token usage** — the card footer shows input/output token counts and context window usage percentage by default
 
-## 📢 News
+## 📢 Current Status
 
-- **2026.3.30**
-  - Install script now automatically disables the built-in OpenClaw Feishu plugin to avoid conflicts
-  - Post-install runs `gateway install` to register the service, plus a health check
-  - ⚠️ **OpenClaw 3.28 is not currently supported** due to compatibility issues. Please downgrade to **3.24**. (Support expected before Apr 4)
-- **2026.3.27**
-  - Compatible with OpenClaw >= 2026.3.22
-  - Added AskUserQuestion interactive tool
-  - Reasoning blocks and tool calls merged into a single expandable panel in chronological order
-  - Footer now shows token usage and context window percentage by default
-  - Fixed card table limit error 230099
-- **2026.3.23** — First release with real-time streaming output and tool call indicators (for OpenClaw < 2026.3.22, use the `0322` branch)
+- **2026.5.28**
+  - Current branch targets and has been tested with `OpenClaw 2026.5.22 (a374c3a)`.
+  - Plugin id changed to `openclaw-feishu-stream` so the fork can be tracked separately.
+  - SDK compatibility shims and `describeMessageTool` action discovery have been added for OpenClaw `2026.5.22`.
+  - Development scripts use the isolated profile `feishu-stream-dev`, so local tests do not modify the main OpenClaw profile.
+  - This is still a source-development branch. Production use needs a full regression pass and rollback plan.
+
+See [COMPATIBILITY.md](./COMPATIBILITY.md) for compatibility notes.
 
 ## 📦 Installation
 
 Requires [OpenClaw](https://openclaw.ai) and Node.js (>= v22).
 
 > [!WARNING]
-> **OpenClaw 3.28 is not currently supported** due to compatibility issues (support expected before Apr 4). If you've already upgraded to 3.28, please downgrade to **3.24** before installing:
-> ```bash
-> npm install -g openclaw@2026.3.24
-> ```
-
-The install script automatically detects your OpenClaw version and installs the right plugin:
-- OpenClaw **>= 2026.3.22** → installs the latest version (reasoning streaming, AskUserQuestion, etc.)
-- OpenClaw **< 2026.3.22** → installs the legacy-compatible version
-
-> [!NOTE]
-> **Alibaba Cloud OpenClaw plans are not supported** (permission restrictions). Please use a self-hosted server.
-
-```bash
-npx -y @colinlu50/openclaw-lark-stream install
-```
-
-To update an existing installation:
-
-```bash
-npx -y @colinlu50/openclaw-lark-stream update
-```
+> This repository is currently adapted for `OpenClaw 2026.5.22`. The release package name and production install script are not finalized. Do not install it into the main profile until the production cutover plan is ready.
 
 ### From source (for development)
 
 ```bash
-cd ~/.openclaw/extensions
-git clone https://github.com/ColinLu50/openclaw-lark-stream.git openclaw-lark-stream
-cd openclaw-lark-stream && npm install && npm run build
-openclaw gateway restart
+git clone https://github.com/Chan110011/openclaw-feishu-stream.git
+cd openclaw-feishu-stream
+npm install
+npm run build
+npm run dev:configure
+npm run dev:link
+npm run dev:inspect
+npm run dev:doctor
+npm run dev:gateway
 ```
+
+Development scripts use the isolated OpenClaw profile `feishu-stream-dev`. They do not modify the main OpenClaw profile or the currently running Feishu plugin.
+
+`dev:configure` needs a separate test Feishu/Lark app. You can enter credentials interactively or pass environment variables:
+
+```bash
+FEISHU_STREAM_DEV_APP_ID=cli_xxx \
+FEISHU_STREAM_DEV_APP_SECRET=xxx \
+npm run dev:configure
+```
+
+Do not reuse the production Feishu/Lark app while the main gateway is running. Two websocket clients for the same app can consume the same event stream and cause duplicate or missing replies.
+
+`dev:gateway` uses `127.0.0.1:19002` to avoid colliding with the main gateway's default port.
+
+> [!WARNING]
+> Before production cutover, remember that this fork and the official Feishu plugin both declare the `feishu` channel. Only one Feishu channel owner should be online at a time.
 
 ## ⚙️ Configuration
 

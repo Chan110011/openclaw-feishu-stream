@@ -8,6 +8,7 @@ Build a maintainable Feishu streaming-card fork for `OpenClaw 2026.5.x`, preserv
 
 - Local OpenClaw version: `2026.5.22 (a374c3a)`
 - Upstream reference: `ColinLu50/openclaw-lark-stream`
+- GitHub repository: `Chan110011/openclaw-feishu-stream`
 - Working branch: `compat/openclaw-2026.5.22`
 
 ## Strategy
@@ -25,8 +26,10 @@ Avoid carrying forward old OpenClaw integration code unless it is still required
 
 ## Git Remotes
 
+- `origin`: `git@github.com:Chan110011/openclaw-feishu-stream.git`
 - `upstream`: ColinLu50 reference repository, fetch only
-- `origin`: reserved for the user's GitHub repository
+
+This local checkout uses a repository-scoped deploy key for command-line pushes. The private key is outside the repository and must not be committed. The key is registered only on `Chan110011/openclaw-feishu-stream` with read/write access.
 
 ## Safe Local Workflow
 
@@ -55,6 +58,16 @@ npm run dev:configure
 Do not reuse the production Feishu/Lark app while the main gateway is running. Two websocket clients for the same app can consume the same event stream and cause duplicate or missing replies.
 
 `dev:gateway` uses `127.0.0.1:19002` so it does not collide with the main gateway's default port.
+
+For the live test profile, copy or configure model authentication separately. Do not commit any OpenClaw profile files, Feishu app secrets, model keys, or auth profiles.
+
+## Verification So Far
+
+- `npm run build`: pass
+- `npm run lint`: pass with existing warnings
+- `npm run dev:inspect`: plugin loaded
+- `npm run dev:doctor`: no plugin issues detected
+- Live test app websocket: received direct messages and completed replies
 
 ## Identity Model
 
