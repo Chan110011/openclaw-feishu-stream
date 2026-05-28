@@ -18,6 +18,7 @@ This fork is developed against the user's currently installed OpenClaw version. 
 - Isolated profile `feishu-stream-dev` can receive Feishu websocket events from a separate test app.
 - `describeMessageTool` compatibility for OpenClaw `2026.5.22` is implemented.
 - Test direct messages can dispatch to the agent and complete replies.
+- Initial regression notes are tracked in [REGRESSION.md](./REGRESSION.md).
 
 ## Known Constraints
 
