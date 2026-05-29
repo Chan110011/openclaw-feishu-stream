@@ -43,7 +43,15 @@
 
 建议先用隔离 profile 测试。确认效果后，再在维护窗口内执行生产安装。
 
-## 从源码安装
+## 安装插件
+
+推荐安装已验证的固定版本：
+
+```bash
+openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.1.1
+```
+
+如需二次开发，也可以从源码安装：
 
 ```bash
 git clone https://github.com/Chan110011/openclaw-feishu-stream.git
@@ -78,16 +86,12 @@ npm run dev:configure
 
 以下命令会影响当前飞书通信，请先确认维护窗口。
 
-在本仓库目录执行：
-
 ```bash
 BACKUP_DIR=~/openclaw-backups/feishu-cutover-$(date +%Y%m%d-%H%M%S)
 mkdir -p "$BACKUP_DIR"
 cp ~/.openclaw/openclaw.json "$BACKUP_DIR/openclaw.json"
-npm install
-npm run build
 openclaw plugins disable feishu
-openclaw plugins install --link .
+openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.1.1
 openclaw config patch --stdin <<'JSON'
 {
   channels: {
@@ -214,14 +218,6 @@ npm run dev:doctor
 ```
 
 `npm run lint` 当前可能保留一批既有类型 warning，只要没有 error 即可继续测试。
-
-## 版本更新
-
-### v0.1.1
-
-- 修复飞书发送 `/new`、`/reset` 等 OpenClaw 控制命令后没有回复的问题。
-- 控制命令继续使用纯文本回复，不进入流式卡片，避免和普通对话输出混在一起。
-- 已在 `OpenClaw 2026.5.22` 下验证：普通文字回复、流式卡片回复、`/new` 命令回复均正常。
 
 ## 许可证
 
