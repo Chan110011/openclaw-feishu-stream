@@ -92,10 +92,9 @@ export async function dispatchPermissionNotification(
  * Dispatch a system command (/help, /reset, etc.) via plain-text delivery.
  * No streaming card, no "Processing..." state.
  *
- * When `suppressReply` is true the agent still runs (e.g. reads workspace
- * files) but its text output is not forwarded to Feishu.  This is used for
- * bare /new and /reset commands: the SDK already sends a "done" notice
- * via its own route, so the AI greeting would be redundant.
+ * When `suppressReply` is true the agent still runs, but its text output is
+ * not forwarded to Feishu. Callers should only enable it when they send their
+ * own acknowledgement elsewhere.
  */
 export async function dispatchSystemCommand(
   dc: DispatchContext,
