@@ -48,7 +48,7 @@
 推荐安装已验证的固定版本：
 
 ```bash
-openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.1.1
+openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.2.0
 ```
 
 如需二次开发，也可以从源码安装：
@@ -91,7 +91,7 @@ BACKUP_DIR=~/openclaw-backups/feishu-cutover-$(date +%Y%m%d-%H%M%S)
 mkdir -p "$BACKUP_DIR"
 cp ~/.openclaw/openclaw.json "$BACKUP_DIR/openclaw.json"
 openclaw plugins disable feishu
-openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.1.1
+openclaw plugins install github:Chan110011/openclaw-feishu-stream@v0.2.0
 openclaw config patch --stdin <<'JSON'
 {
   channels: {
