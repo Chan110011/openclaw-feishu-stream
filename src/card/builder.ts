@@ -30,6 +30,7 @@ export const REASONING_ELEMENT_ID = 'reasoning_content';
 export interface ToolCallInfo {
   name: string;
   status: 'running' | 'complete' | 'error';
+  operationTitle?: string;
   args?: Record<string, unknown>;
   result?: string;
   durationMs?: number;
@@ -218,6 +219,18 @@ function compactModelName(model: string): string {
   const withoutProvider = trimmed.includes('/') ? (trimmed.split('/').pop() ?? trimmed) : trimmed;
   if (withoutProvider.length <= 28) return withoutProvider;
   return `${withoutProvider.slice(0, 25)}...`;
+}
+
+function compactOperationTitle(value: string | undefined): string {
+  const collapsed = value?.replace(/\s+/g, ' ').trim();
+  if (!collapsed) return '';
+  if (collapsed.length <= 70) return collapsed;
+  return `${collapsed.slice(0, 67).trimEnd()}...`;
+}
+
+export function formatRunningToolLine(tool: Pick<ToolCallInfo, 'name' | 'operationTitle'>): string {
+  const operation = compactOperationTitle(tool.operationTitle);
+  return operation ? `🔄 **${tool.name}** · ${operation}` : `🔄 **${tool.name}**...`;
 }
 
 export function formatFooterRuntimeSegments(params: {
@@ -424,7 +437,7 @@ function buildStreamingCard(
   if (running) {
     elements.push({
       tag: 'markdown',
-      content: `🔄 **${running.name}**...`,
+      content: formatRunningToolLine(running),
       text_size: 'notation',
     });
   }

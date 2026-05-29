@@ -20,7 +20,15 @@ import { extractLarkApiCode } from '../core/api-error';
 import { larkLogger } from '../core/lark-logger';
 import { registerShutdownHook } from '../core/shutdown-hooks';
 import { sendCardFeishu, updateCardFeishu } from '../messaging/outbound/send';
-import { STREAMING_ELEMENT_ID, buildCardContent, splitReasoningText, stripReasoningTags, toCardKit2, type ToolCallInfo } from './builder';
+import {
+  STREAMING_ELEMENT_ID,
+  buildCardContent,
+  formatRunningToolLine,
+  splitReasoningText,
+  stripReasoningTags,
+  toCardKit2,
+  type ToolCallInfo,
+} from './builder';
 import {
   FEISHU_CARD_TABLE_LIMIT,
   isCardRateLimitError,
@@ -64,6 +72,25 @@ interface TerminalCardTextImageResolver {
 interface TerminalCardContentInput {
   text: string;
   reasoningText?: string;
+}
+
+interface ItemEventPayload {
+  itemId?: string;
+  kind?: string;
+  title?: string;
+  name?: string;
+  phase?: string;
+  status?: string;
+  summary?: string;
+  progressText?: string;
+  toolCallId?: string;
+}
+
+function compactOperationTitle(value: string | undefined): string | undefined {
+  const collapsed = value?.replace(/\s+/g, ' ').trim();
+  if (!collapsed) return undefined;
+  if (collapsed.length <= 70) return collapsed;
+  return `${collapsed.slice(0, 67).trimEnd()}...`;
 }
 
 // ---------------------------------------------------------------------------
@@ -439,6 +466,21 @@ export class StreamingCardController {
     if (!this.shouldProceed('onToolStart.postCreate')) return;
     if (!this.cardKit.cardMessageId) return;
 
+    await this.throttledCardUpdate();
+  }
+
+  async onItemEvent(payload: ItemEventPayload): Promise<void> {
+    if (!this.shouldProceed('onItemEvent')) return;
+
+    const operationTitle = compactOperationTitle(payload.title || payload.progressText || payload.summary);
+    if (!operationTitle) return;
+
+    const runningTool = [...this.toolCalls].reverse().find((tc) => tc.status === 'running');
+    if (!runningTool) return;
+
+    runningTool.operationTitle = operationTitle;
+
+    if (!this.cardKit.cardMessageId) return;
     await this.throttledCardUpdate();
   }
 
@@ -977,7 +1019,7 @@ export class StreamingCardController {
     // Running tool indicator
     const runningTool = this.toolCalls.find((tc) => tc.status === 'running');
     if (runningTool) {
-      parts.push(`🔄 **${runningTool.name}**...`);
+      parts.push(formatRunningToolLine(runningTool));
     }
 
     // Answer text (only shown when not in pure reasoning phase)

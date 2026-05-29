@@ -409,6 +409,17 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
             onReasoningStream: (payload: ReplyPayload) => controller.onReasoningStream(payload),
             onPartialReply: (payload: ReplyPayload) => controller.onPartialReply(payload),
             onToolStart: (payload: { name?: string; phase?: string }) => controller.onToolStart(payload),
+            onItemEvent: (payload: {
+              itemId?: string;
+              kind?: string;
+              title?: string;
+              name?: string;
+              phase?: string;
+              status?: string;
+              summary?: string;
+              progressText?: string;
+              toolCallId?: string;
+            }) => controller.onItemEvent(payload),
           }
         : {}),
     },
